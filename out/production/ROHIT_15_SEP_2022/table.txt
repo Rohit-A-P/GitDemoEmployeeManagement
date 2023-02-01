@@ -1,0 +1,142 @@
+CREATE DATABASE EMPLOYEE_DATABASE;
+
+CREATE TABLE TRAINER  (
+   ID  VARCHAR(25) NOT NULL,
+   NAME  VARCHAR(45) NOT NULL,
+   BLOOD_GROUP  VARCHAR(5) NULL,
+   DESIGNATION  VARCHAR(35) NULL,
+   DATE_OF_BIRTH  DATE NULL,
+   GENDER  enum ('MALE','FEMALE','TRANSGENDER') NULL,
+   PHONE_NUMBER  BIGINT(16) NULL,
+   EMAIL  VARCHAR(30) NULL,
+   DATE_OF_JOINING  DATE NULL,
+   TRAINING_SINCE  YEAR(4) NULL,
+   PRIMARY KEY ( id ));
+
+CREATE TABLE TRAINEE  (
+   ID  VARCHAR(25) NOT NULL,
+   NAME  VARCHAR(45) NOT NULL,
+   BLOOD_GROUP  VARCHAR(5) NULL,
+   DESIGNATION  VARCHAR(35) NULL,
+   DATE_OF_BIRTH  DATE NULL,
+   GENDER  enum ('MALE','FEMALE','TRANSGENDER') NULL,
+   PHONE_NUMBER  BIGINT(14) NULL,
+   EMAIL  VARCHAR(30) NULL,
+   DATE_OF_JOINING DATE NULL,
+   SKILLS  VARCHAR(45) NULL,
+   PRIMARY KEY ( id ));
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                            09-09-2022
+
+CREATE DATABASE EMPLOYEE_DATABASE;
+
+USE EMPLOYEE_DATABASE;
+
+CREATE TABLE EMPLOYEE (
+  id VARCHAR(7) NOT NULL,
+  name VARCHAR(45) NOT NULL,
+  blood_group VARCHAR(45) NULL,
+  date_of_birth DATE NULL,
+  designation VARCHAR(45) NULL,
+  gender ENUM('MALE', 'FEMALE', 'OTHERS') NOT NULL,
+  phone_number BIGINT(10) NULL,
+  email VARCHAR(35) NULL,
+  PRIMARY KEY (id));
+
+CREATE TABLE TRAINER (
+  trainer_id VARCHAR(8) NOT NULL,
+  id VARCHAR(6) NOT NULL,
+  training_since YEAR(4) NOT NULL,
+  PRIMARY KEY (trainer_id),
+  FOREIGN KEY(id) REFERENCES EMPLOYEE(id));
+
+CREATE TABLE TRAINEE (
+  trainee_id VARCHAR(8) NOT NULL,
+  id VARCHAR(45) NOT NULL,
+  date_of_joining DATE NOT NULL,
+  PRIMARY KEY (trainee_id),
+  FOREIGN KEY(id) REFERENCES EMPLOYEE(id));
+
+CREATE TABLE SKILLS (
+  skill_id VARCHAR(9) NOT NULL,
+  trainee_id VARCHAR(8) NOT NULL,
+  skill_name VARCHAR(20) NULL,
+  skill_experience float(4) NULL,
+  skill_version VARCHAR(10) NULL,
+  skill_certification VARCHAR(3) NULL,
+  PRIMARY KEY (skill_id),
+  FOREIGN KEY(trainee_id) REFERENCES TRAINEE(trainee_id));
+
+
+-------------------------------------------------------------------------------------------------------------------
+CREATE TABLE RELATION (
+  group_id VARCHAR(8) NOT NULL,
+  group_number int(4) NOT NULL,
+  trainer_id VARCHAR(8) NOT NULL,
+  trainee_id VARCHAR(8) NOT NULL,
+  PRIMARY KEY(group_id),
+  FOREIGN KEY(trainee_id) REFERENCES TRAINEE(trainee_id),   
+  FOREIGN KEY(trainer_id) REFERENCES TRAINER(trainer_id));
+
+  Create procedure EMPLOYEE_RELATION_PROCEDURE(IN group__id VARCHAR(8) NOT NULL, IN trainee__id VARCHAR(8), IN trainer__id VARCHAR(8))
+  BEGIN
+  INSERT INTO RELATION(group__id, group__number, trainer__id, trainee__id) 
+  END
+      
+  Create procedure SKILLS_PROCEDURE(skill__id IN skill_id VARCHAR(9), trainee__id IN trainee_id VARCHAR(8), skill__name IN skill_name VARCHAR(20),
+                                    skill__experience IN skill_experience float(4), skill__version IN skill_version VARCHAR(10),
+                                    skill__certification IN skill_certification VARCHAR(3))
+  IS
+  BEGIN
+  INSERT INTO SKILLS(skill__id, trainee__id, skill__name, skill__experience, skill__version, skill__certification) 
+  END
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT * FROM EMPLOYEE INNER JOIN TRAINEE ON EMPLOYEE.ID = TRAINEE.ID INNER JOIN SKILLS ON SKILLS.ID = TRAINEE.ID ;
+
+SELECT * FROM EMPLOYEE INNER JOIN TRAINER ON EMPLOYEE.ID = TRAINER.ID;
+
+
+========================================================================================================================================================
+
+
+BEGIN TRANSACTION;
+
+     INSERT INTO employee ( id, name, blood_group, date_of_birth, designation, gender, phone_number, email)
+     values (1,'ROHIT','O+', '2000-12-15', 'SOFTWARE ENGINEER TRAINEE', 'MALE', 8438884595, 'rohit@ideas2it.com');
+     INSERT INTO Trainee (trainee_id, id, date_of_joining)
+     values (1,'1','2022-07-18');
+     INSERT INTO SKILLS(skill_id,id,skill_name, skill_experience, skill_version, skill_certification) 
+     values (1,'1','java',2,'1.0','yes');
+
+commit;
+
+========================================================================================================================================================
+
+
+            
+
+/*            for(int index = 0; index <= totalNumberOfSkills; index++){
+                CallableStatement callableStatement = connection.prepareCall("{call EMPLOYEE_RELATION_PROCEDURE(?,?,?,?,?,?)}");
+                callableStatement.setString(1, SkillId[index]);
+                callableStatement.setString(2, traineeId);
+                callableStatement.setString(3, skillName[index]);
+                callableStatement.setFloat(4, skillExperience[index]);
+                callableStatement.setString(5, skillVersion[index]);
+                callableStatement.setString(6, skillCertification[index]);
+                callableStatement.execute();
+            }
+*/
+                     
+/*
+            for(int index = 0; index <= numberOfTrainees; index++){
+                CallableStatement callableStatement = connection.prepareCall("{call SKILLS_PROCEDURE(?,?,?,?)}");
+                callableStatement.setString(1, getTtrId[index]);
+                callableStatement.setString(2, getTrainerId);
+                callableStatement.setInt(3, getGroupNumber);
+                callableStatement.setString(4, getTraineeId[index]);
+                callableStatement.execute();
+            }
+*/

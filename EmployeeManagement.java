@@ -9,10 +9,11 @@ import com.ideas2it.controller.EmployeeController;
 */
 public class EmployeeManagement {
 
-    public static void main(String[] args) { 
+    public static void main(String[] args) {
  
         EmployeeController employeeController = new EmployeeController();
-                  
+        System.out.println("Second commit");
+        
         employeeController.mainMenu();       
     }        
 }
